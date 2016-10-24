@@ -1,0 +1,266 @@
+{% extends 'base.html' %}{% load static from staticfiles %}{% load myf %}
+{% block title %}
+    {{ stitle }}
+{% endblock %}
+{% block icontent %}
+    <div class="wrapper wrapper-content animated fadeInRight ecommerce">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                    <label>选择会议届次</label>
+                        <select id="filter-hyjc" class="form-control">
+                            {% for hyjc in hyjcs %}
+
+                                {% if forloop.last %}
+                                    <option value="{{ hyjc.value }}" selected>{{ hyjc.text }}</option>
+                                {% else %}
+                                    <option value="{{ hyjc.value }}">{{ hyjc.text }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>输入搜索内容</label>
+                        <input type="text" id="filter" min="1" value="" placeholder=""
+                               class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>选择办理状态</label>
+                        <select id="filter-stat" class="form-control">
+                            <option></option>
+                            {% for stat in status %}
+                                <option value="{{ stat.value }}">{{ stat.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group" style="margin-top: 22px">
+                        <button id="make_search" class="btn btn-primary" title="点击查询"><i class="fa fa-search"></i>搜索</button>
+                        <button class="clear-filter btn btn-info" title="清除过滤">清除</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+
+                        <table id="zdata" class="footable table table-stripped  toggle-square-filled "
+                               data-page-size="10000">
+                            <thead>
+                            <tr>
+
+                                <th data-toggle="true">标题</th>
+                                <th data-hide="phone" class="text-center">编号</th>
+                                <th data-hide="phone">作者</th>
+                                <th data-hide="phone" class="text-center">时间</th>
+                                <th data-hide="phone" class="text-center">办理结果</th>
+                                <th data-hide="phone" class="text-center">浏览次数</th>
+
+
+                                <th data-hide="all" class="text-center">会议届次</th>
+                                <th data-hide="all" class="text-center">查看原文</th>
+                                {% if istian %}
+                                <th data-hide="all" class="text-center">答复</th>
+                                {% endif %}
+                                <th data-hide="all" class="text-center">提交时间</th>
+                                <th data-hide="all" class="text-center">提交人</th>
+                                {% if istian %}
+                                <th data-hide="all" class="text-center">办理单位</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+
+                            <tr>
+                                <td colspan="6" class="text-center">
+
+                                    <div id="jindutiao" class="progress progress-striped active ">
+                                        <div class="sk-spinner sk-spinner-circle">
+                                            <div class="sk-circle1 sk-circle"></div>
+                                            <div class="sk-circle2 sk-circle"></div>
+                                            <div class="sk-circle3 sk-circle"></div>
+                                            <div class="sk-circle4 sk-circle"></div>
+                                            <div class="sk-circle5 sk-circle"></div>
+                                            <div class="sk-circle6 sk-circle"></div>
+                                            <div class="sk-circle7 sk-circle"></div>
+                                            <div class="sk-circle8 sk-circle"></div>
+                                            <div class="sk-circle9 sk-circle"></div>
+                                            <div class="sk-circle10 sk-circle"></div>
+                                            <div class="sk-circle11 sk-circle"></div>
+                                            <div class="sk-circle12 sk-circle"></div>
+                                        </div>
+
+                                    </div>
+
+                                    <button class="btn btn-sm btn-primary addmore" zdata="0" browserok="0">
+                                        加载更多{{ tos }}</button>
+
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+
+
+{% block mcss %}
+
+    <link href="{% static "css/plugins/footable/footable.core.css" %}" rel="stylesheet">
+{% endblock %}
+{% block bscript %}
+
+    <script src="{% static "js/plugins/footable/footable.all.min.js" %}"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            $('#zdata').footable()
+            $("#make_search").on("click", function () {
+                congtoukaishi()
+                get_data()
+            });
+            $('.clear-filter').on("click", function (e) {
+                e.preventDefault();
+                $('#filter-stat').val('');
+                $('#filter').val('');
+                $('#zdata').trigger('footable_clear_filter');
+                congtoukaishi()
+                get_data()
+
+            });
+
+            $('#filter-hyjc').on("change", function (e) {
+                e.preventDefault();
+                congtoukaishi()
+                get_data()
+            });
+            $('#filter-stat').on("change", function (e) {
+                e.preventDefault();
+                congtoukaishi()
+                get_data()
+            });
+
+            $(".addmore").on("click", function (e) {
+                e.preventDefault();
+                get_data()
+            })
+            get_data()
+            $("#jindutiao").hide()
+        });
+
+        function create_seller_table_row(item) {
+            var tos = "{{ detailstr }}"
+            row = ""
+            if ('{{ istian }}' == 'True') {
+                banlidanwei = '<td>' + item.banlidanwei + '</td>'
+                dafu = '<td>' + item.dafu + '</td>'
+            }
+            else {
+
+                banlidanwei = ''
+                dafu = ''
+            }
+            if(item.admin_status && (item.admin_status).length > 0)
+                row = '<tr><td>' + item.sbiaoti + '</td><td>' + item.issueno + '</td><td>' + item.writer + '</td><td class="text-center">' + item.submit_time + '</td><td class="text-center"><a tabindex="0" data-trigger="focus" role="button" class="label label-' + item.labelstyle + '" data-toggle="popover" data-container="body" data-placement="left"  title="办理详情 ' + item.admin_statusc + '" data-content="' + item.admin_statusm + '">' + item.admin_status + '</a></td><td class="text-center"><span class="badge badge-primary">' + item.view_counts + '</span></td><td>' + item.hyjc + '</td><td><a  data-toggle="tooltip" data-placement="top"title="在新的页面打开" target="_blank" href="' + tos + item.id + '/">' + item.bbiaoti + '</a></td>' + dafu + '<td><time class="timeago" datetime="' + item.submit_time + '"></time></td><td>' + item.submit_name + '</td>' + banlidanwei + '</tr>';
+            return row;
+        }
+
+        function get_data() {
+
+
+            curpage = parseInt($(".addmore").attr("zdata"))
+            console.log(curpage)
+
+
+            $.ajax({
+                url: '{{ requeststr }}',
+                data: {
+                    page: curpage,
+                    id: $("#filter-hyjc").val(),
+                    bljg: $("#filter-stat").val(),
+                    filter: $("#filter").val()
+                },
+                beforeSend:function(){
+
+                    hide_button()
+                },
+                success: function (data) {
+                    rows = ""
+                    $.each(data.data, function (index, item) {
+                        var row = create_seller_table_row(item);
+                        rows += row;
+                    });
+                    if (rows)
+                    $('#zdata tbody').append($(rows));
+
+                    $('#count').text(data.count);
+                    $('table').trigger('footable_initialize');
+                    $(".timeago").timeago();
+                    curpage += 1
+                    $(".addmore").attr("zdata", curpage)
+                    show_button()
+                    if (curpage >= data.pages) {
+                        daozuihouyiye()
+                    }
+                    $('[data-toggle="popover"]').popover()
+                },
+                error: function (xhr, statusText, error) {
+                    swal({
+                        title: "加载错误",
+                        text: "是否已经登录超时",
+                        showConfirmButton: true
+                    }, function () {
+                        location.href = '/login/'
+                    });
+                    show_button()
+                }
+            });
+        }
+        function show_button() {
+            $(".addmore").show()
+
+            $("#jindutiao").hide()
+            console.log('show_button')
+
+        }
+        function hide_button() {
+
+            $("#jindutiao").show()
+            $(".addmore").hide()
+        }
+
+
+        function daozuihouyiye() {
+
+            $(".addmore").hide()
+        }
+
+        function congtoukaishi() {
+            $(".addmore").show()
+            $("#zdata tbody").html("")
+            $(".addmore").removeClass("disabled")
+            $(".addmore").text("加载更多{{ tos }}")
+            $(".addmore").attr("zdata", 0)
+            $(".addmore").attr("browserok", "0")
+        }
+    </script>
+
+
+
+{% endblock %}

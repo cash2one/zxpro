@@ -1,0 +1,132 @@
+{% extends base_template %}
+{% load i18n xadmin_tags %}
+{% load url from future %}
+{% load crispy_forms_tags %}
+
+{% block extrastyle %}{{ block.super }}
+    <style type="text/css">
+        #panel-login {
+            max-width: 550px;
+        }
+
+        #panel-login .controls {
+            padding: 0px 80px 15px !important;
+        }
+
+        #panel-login .alert-block {
+            padding: 0px;
+        }
+
+        #panel-login .alert-block ul {
+            margin: 10px 15px;
+            padding-left: 0px;
+        }
+
+        #panel-login .alert-block ul li {
+            list-style-type: none;
+        }
+
+        .input-group-lg > .form-control, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .btn {
+            height: 45px;
+            padding: 10px 12px;
+
+        }
+
+        h1 {
+{#            font-size: 55px;#}
+{#            font-weight: bolder;#}
+            color: red;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #444 url("{% static "xadmin/image/backgroud.png" %}")
+        }
+    </style>
+    <link href="{% static "xadmin/css/jquery-letterfx.min.css" %}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block bodyclass %}login{% endblock %}
+{% block body %}
+    <div class="container">
+        <form action="" method="post" id="login-form">
+            <div class="panel panel-default panel-single" id="panel-login">
+                {% csrf_token %}
+                {% block login_form %}
+                    <div class="panel-heading" style="text-align: center">
+                        {% block login_heading %}
+                            <h1 class="form-signin-heading">
+                               徐汇政协提案系统后台管理</h1>
+                        {% endblock %}
+                    </div>
+                    <div class="panel-body">
+
+                        {% view_block 'form_top' %}
+
+                        {% include 'bootstrap3/errors.html' %}
+
+                        <div id="div_id_username" class="row{% if form.username.errors %} has-error{% endif %}">
+                            <div class="controls clearfix">
+                                <div class="input-group input-group-lg">
+
+                                    <input class="form-control input-lg" id="id_username" maxlength="254"
+                                           name="username" type="text" placeholder="{% trans "Username" %}"> <span
+                                        class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                                </div>
+                                {% for error in form.username.errors %}
+                                    <p id="error_{{ forloop.counter }}_{{ field.auto_id }}"
+                                       class="text-danger help-block">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div id="div_id_password" class="row{% if form.password.errors %} has-error{% endif %}">
+                            <div class="controls clearfix">
+                                <div class="input-group input-group-lg">
+
+                                    <input class="form-control input-lg" id="id_password" name="password"
+                                           type="password" placeholder="{% trans "Password" %}"> <span
+                                        class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
+                                </div>
+                                {% for error in form.password.errors %}
+                                    <p id="error_{{ forloop.counter }}_{{ field.auto_id }}"
+                                       class="text-danger help-block">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="this_is_the_login_form" value="1"/>
+                        <input type="hidden" name="next" value="{{ next }}"/>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans 'log in' %}
+                        </button>
+                    </div>
+                {% endblock %}
+            </div>
+        </form>
+
+    </div>
+    <script src="{% static "xadmin/js/tuxsudo.min.js" %}"></script>
+    <script src="{% static "xadmin/js/jquery-letterfx.min.js" %}"></script>
+    <script type="text/javascript">
+        function shake(o) {
+            var $panel = $("#" + o);
+            box_left = ($(window).width() - $panel.width()) / 2;
+            $panel.css({'left': box_left, 'position': 'absolute'});
+            for (var i = 1; 4 >= i; i++) {
+                $panel.animate({left: box_left - (40 - 10 * i)}, 50);
+                $panel.animate({left: box_left + 2 * (40 - 10 * i)}, 50);
+            }
+        }
+        $(function () {
+            {% if errorsh == '1' %}
+                shake('panel-login')
+            {% endif %}
+            $(".form-signin-heading").letterfx({"fx": "smear", "letter_end": "rewind"});
+            document.getElementById('id_username').focus();
+
+        })
+    </script>
+{% endblock %}

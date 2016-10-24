@@ -1,0 +1,31 @@
+{% extends 'base.html' %}{% load static from staticfiles %}
+
+
+{% block icontent %}
+{% endblock %}
+
+
+{% block bscript %}
+
+    <script type="text/javascript">
+        $(function () {
+            swal({
+                title: "发生意外",
+                text: "{{ error }}",
+                type: "error",
+                confirmButtonText: "知道了",
+                timer: 3000,
+            }, function () {
+                location.href = "/"
+            });
+
+            setTimeout(gosi, 3500)
+        });
+
+        function gosi() {
+
+
+            location.href = "/"
+        }
+    </script>
+{% endblock %}

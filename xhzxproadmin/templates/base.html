@@ -1,0 +1,378 @@
+{% load static from staticfiles %}
+{% load myf %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>徐汇政协 | {{ stitle }}
+    </title>
+    <link rel="bookmark" type="image/x-icon" href={% static "favicon.ico" %}/>
+    <link rel="shortcut icon" href={% static "favicon.ico" %}>
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
+
+    {% block mcss %}
+
+    {% endblock %}
+    <link href="{% static "css/animate.css" %}" rel="stylesheet">
+    <link href="{% static "css/style.css" %}" rel="stylesheet">
+    <link href="{% static "css/ggtooltip.css" %}" rel="stylesheet"/>
+    <!-- Sweet Alert -->
+    <link href="{% static 'css/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet">
+    {% block mstyle %}
+    {% endblock %}
+
+
+    <style type="text/css">
+
+
+        .modal-body p {
+
+            text-indent: 2em;
+        }
+    </style>
+</head>
+<body class="">
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header" style="padding: 8px">
+                    <div class="dropdown profile-element text-center">
+                        <span>
+                            <img alt="image" src="/static/img/admin.png"
+                                 class="img-circle m-t-xs img-responsive lazy"
+                                 data-original="/static/photo/small/{{ wy.wyno }}.jpg"
+                                 style="width:34%;margin:0 auto;"/>
+                             </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong
+                                    class="font-bold">{{ wy.name }}</strong>
+                             </span> <span class="text-muted text-xs block">{{ wy.iswy | get_wytype }} <b
+                                    class="caret"></b></span> </span> </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li><a href="#"><i class="fa fa-user"></i>个人资料</a></li>
+                            <li><a href="/my_nt/"><i class="fa fa-bell"></i>提醒</a></li>
+                            <li><a href="/my_ad/"><i class="fa fa-bell-o"></i>公告</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/logout/"><i class="fa fa-sign-out"></i>注销</a></li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">
+                        徐汇
+                    </div>
+                </li>
+                <li>
+                    <a href="/"><i class="fa fa-user"></i> <span class="nav-label">个人中心</span> <span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        {#                        <li><a href="#"><i class="fa fa-credit-card"></i>会议</a></li>#}
+                        <li><a href="/my_ta/"><i class="fa fa-newspaper-o"></i>参与的提案</a></li>
+                        <li><a href="/mysubmit_ta/"><i class="fa fa-newspaper-o"></i>提交的提案</a></li>
+                        <li><a href="/my_sq/"><i class="fa fa-newspaper-o"></i>参与的社情民意</a></li>
+                        <li><a href="/mysubmit_sq/"><i class="fa fa-newspaper-o"></i>提交的社情民意</a></li>
+                        {#                        <li><a href="/my_kq/"><i class="fa fa-clock-o"></i>考勤</a></li>#}
+                        <li><a href="/my_ad/"><i class="fa fa-clock-o"></i>公告</a></li>
+                        <li><a href="/my_nt/"><i class="fa fa-clock-o"></i>办理结果反馈</a></li>
+                        <li><a href="/my_tl/"><i class="fa fa-clock-o"></i>操作记录</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/wy/"><i class="fa fa-search"></i> <span class="nav-label">委员查询</span> </a>
+                </li>
+                <li>
+                    <a href="/issue/sqmy/search/" class="active"><i class="fa fa-search"></i> <span class="nav-label">社情民意查询</span></a>
+                </li>
+                <li>
+                    <a href="/issue/tian/search/"><i class="fa fa-search"></i> <span class="nav-label">提案查询</span></a>
+                </li>
+                <li>
+
+                    <a href="#">
+                        <hr style="border : 1px solid"/>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="/sbm_sq/"><i class="fa fa-cloud-upload"></i> <span class="nav-label">社情民意提交</span></a>
+                </li>
+
+
+                <li>
+                    <a href="/sbm_ta/"><i class="fa fa-cloud-upload"></i> <span class="nav-label">提案提交</span></a>
+                </li>
+{#                <li>#}
+{#                    <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">会议系统</span><span#}
+{#                            class="fa arrow"></span></a>#}
+{#                    <ul class="nav nav-second-level collapse">#}
+{#                        <li><a href="#"><i class="fa fa-cloud-upload"></i>创建会议</a></li>#}
+{#                        <li><a href="#"><i class="fa fa-cloud-upload"></i>会议签到</a></li>#}
+{#                        <li><a href="#"><i class="fa fa-cloud-upload"></i>查看会议</a></li>#}
+{#                        <li><a href="#"><i class="fa fa-cloud-upload"></i>考勤统计</a></li>#}
+{#                        <li><a href="#"><i class="fa fa-cloud-upload"></i>初始化</a></li>#}
+{#                        <li><a href="#"><i class="fa fa-cloud-upload"></i>写卡</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                <li>#}
+{#                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label">公告管理</span><span#}
+{#                            class="fa arrow"></span></a>#}
+{#                    <ul class="nav nav-second-level collapse">#}
+{#                        <li><a href="#"><i class="fa fa-cloud-upload"></i>公告管理</a></li>#}
+{#                        <li><a href="#"><i class="fa fa-cloud-upload"></i>公告添加</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+            </ul>
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <button class="navbar-minimalize minimalize-styl-2 btn btn-primary "><i
+                            class="fa fa-angle-double-left"></i>
+                    </button>
+                    {% if not zhuye %}
+                        <a class="minimalize-styl-2 btn btn-success " title="回到首页" href="/"><i
+                                class="fa fa-home"></i>
+                        </a>
+                    {% endif %}
+
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message">徐汇区政协综合信息系统</span>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" data-target="#helpModal" href="#">
+                            <i class="fa fa-question-circle"></i> 使用帮助
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bell-o"></i> <span class="label label-warning">{{ ads | length }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-messages">
+                            {% for ad in ads %}
+                                {% if forloop.counter < 6 %}
+                                    <li>
+                                        <div class="dropdown-messages-box">
+                                            <div class="media-body text-center">
+                                                <a href="/ad/detail/{{ ad.pk }}/" data-toggle="tooltip"
+                                                   data-placement="top" title="{{ ad.submit_time }},点击查看">{{ ad }}</a>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="divider"></li>
+                                {% endif %}
+                            {% endfor %}
+
+                            <li>
+                                <div class="text-center link-block">
+                                    <a href="/my_ad/">
+                                        <i class="fa fa-envelope"></i> <strong>查看所有公告,共(<code>{{ ads|length }}</code>)条</strong>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bell"></i> <span class="label label-primary mc">{{ minds|zlen }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-alerts">
+                            {% for mind in minds %}
+                                {% if forloop.counter < 6 and mind.unread %}
+                                    <li>
+                                        <div class="dropdown-messages-box">
+                                            <div class="media-body text-center">
+                                                <a href="{{ mind.detail }}" data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="{{ mind.time }}:{{ mind.text |safe }}">{{ mind.text |safe }}</a>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="divider mc"></li>
+                                {% endif %}
+
+                            {% endfor %}
+
+                            <li>
+                                <div class="text-center link-block">
+                                    <a href="/my_nt/">
+                                        <i class="fa fa-info"></i><strong>查看所有提醒,共(<code
+                                            class="mc">{{ minds|enablen }}</code>)条</strong>
+
+                                    </a>
+                                </div>
+                            </li>
+                            {% if tobirth %}
+                            <li class="divider"></li>
+                            <li>
+                                <div class="text-center link-block">
+
+                                    <span class="text-muted">今日过生日:</span>
+                                        {% for b in tobirth %}
+                                            <strong>{{ b }}</strong>
+                                            {% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </li>
+                            {% endif %}
+                            {% if camebirth %}
+                            <li class="divider"></li>
+                            <li>
+                                <div class="text-center link-block">
+
+                                    <span class="text-muted">未来七天内过生日:</span>
+                                        {% for b in camebirth %}
+                                            <strong>{{ b }}</strong>
+                                            {% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="/logout/">
+                            <i class="fa fa-sign-out"></i> 注销
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-sm-12">
+                <h3>{{ othertitle }}</h3>
+                <ol class="breadcrumb">
+                    <li>
+                        {{ mtitle |safe }}
+                    </li>
+                    <li class="active">
+                        <strong>{{ stitle |safe }}</strong>
+                    </li>
+                </ol>
+            </div>
+
+        </div>
+        {% block icontent %}
+        {% endblock %}
+        <div class="footer">{% if wy.lastlogin %}
+            <div class="pull-right">
+                <button class=" btn btn-xs" data-toggle="modal" data-target="#updateModal">更新说明
+                </button>
+                <span class="label">上次登录: {{ wy.lastlogin }}</span>
+            </div>
+        {% endif %}
+            <div class="text-center">
+
+                <small>版权所有 中国人民政治协商会议上海市徐汇区委员会 上海中网网络安全技术有限公司制作 &copy; 2015</small>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="helpModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                        class="sr-only">Close</span></button>
+                <i class="fa fa-question-circle modal-icon"></i>
+                <h4 class="modal-title">徐汇区政协提案、社情民意信息提交、查询说明</h4>
+            </div>
+            <div class="modal-body">
+
+                <strong>一、概述</strong>
+
+                <P>1、该系统适用于 IE10（兼容模式）、360（极速模式）、Google(推荐使用)、Firefox等浏览器。建议使用非IE内核浏览器获得最佳体验。 </P>
+
+                <p>2、提案提交后需经提案委员会审核立案，未立案前其他用户不能查询该提案。</p>
+
+                <p>3、社情民意提交后需经政协办公室审核发布，未发布前其他用户不能查询该社情民意信息。</p>
+                <strong>二、提案提交</strong>
+
+                <P>
+                    1、点击左侧导航栏中的“提案提交”进入。第一步，填写提案人信息。个人提案请选择提案人（联名提案只答复前三人）。集体提案请选择集体。建议承办单位可不填。第二步，填写提案标题、情况反映、意见和建议（可复制）。确认无误后点击“完成”。</P>
+
+                <p>2、点击页面左侧“个人中心”，可以进入“提案”选项可以查看刚才提交的提案，同时页面右上角提醒按钮会有数字显示，点击均可链接至提案。</p>
+
+                <p>3、提案提交后可修改或删除，立案后不可操作。</p>
+                <strong>三、提案查询</strong>
+
+                <p>
+                    1、点击左侧导航栏中的“提案查询”进入。可以从“政协界次选择”，“办理结果”等下拉式菜单中，快速选取并查询所需要的提案。“查询输入栏”用来输入查询的关键字。查询关键字可以是提案标题、提案作者、提案关键字、提案编号、提案摘要中的任意字符串，多个关键字之间以空格隔开。（注：提案编号格式为YY-DDDD,其中
+                    YY为年份后两位，DDDD为提案编号）</p>
+
+                <p>2、该系统目前可供查询的提案，为十二届一次会议至十三届四次会议以来所有提案，由于系统改版后部分数据尚未导入，目前以上提案办理结果全部显示为“待处理”，工作人员将在全会后尽快更新。</p>
+                <strong>四、社情民意提交和查询与提案操作基本一致。</strong>
+            </div>
+            <div class="modal-footer text-align-center">
+                <button type="button" class="btn btn-success" data-dismiss="modal">知道了</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="updateModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content animated rollIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title">更新说明 版本: <small>1.2</small></h4>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <li>增加<strong>提案</strong>和<strong>社情民意</strong>搜索按钮</li>
+                    <li><strong>提案</strong>和<strong>社情民意</strong>搜索时增加作者名查询</li>
+                    <li><strong>提案</strong>和<strong>社情民意</strong>新增修改</li>
+                    <li>修复<strong>提案</strong>多作者顺序不能保存的BUG</li>
+                    <li><i class="fa fa-user"></i>个人中心 增加 <strong>提交的提案</strong> 用于管理替他人发布的<strong>提案</strong></li>
+                    <li><i class="fa fa-user"></i>个人中心 增加 <strong>提交的社情民意</strong> 用于管理替他人发布的<strong>社情民意</strong></li>
+                </ol>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-success" data-dismiss="modal">知道了</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Mainly scripts -->
+<script src="{% static "js/jquery-2.1.1.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/plugins/metisMenu/jquery.metisMenu.js" %}"></script>
+<script src="{% static "js/plugins/slimscroll/jquery.slimscroll.min.js" %}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{% static "js/inspinia.js" %}"></script>
+<script src="{% static "js/plugins/pace/pace.min.js" %}"></script>
+<!-- Sweet alert -->
+<script src="{% static "js/plugins/sweetalert/sweetalert.min.js" %}"></script>
+<script src="{% static "js/jquery.lazyload.js" %}"></script>
+{#<script src="{% static "js/ggtooltip.js" %}"></script>#}
+<script src="{% static "js/timeago.js" %}"></script>
+<script src="{% static "js/timeago.zh-cn.js" %}"></script>
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="popover"]').popover()
+        $("img.lazy").lazyload();
+    })
+</script>
+{% block bscript %}
+{% endblock %}
+
+</body>
+
+</html>
+

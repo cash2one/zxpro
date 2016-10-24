@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% load myf %}
+{% block mtitle %}
+{% endblock %}
+{% block icontent %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="grid" id="masonry">
+            {% for wy in wys %}
+                <div class="grid-item">
+                    <div class="ibox">
+                        <div class="ibox-content">
+{#                            <a href="/wy/{{ wy.wyno }}/">#}
+                            <a href="#">
+                                <div class="col-sm-5">
+                                    <div class="text-center">
+                                        <img alt="image" class=" m-t-xs img-responsive lazy"
+                                             data-original="/static/photo/small/{{ wy.wyno }}.jpg"
+                                             src="/static/img/admin.png">
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <h3><strong>{{ wy.name }}</strong></h3>
+
+                                    <ul class="list-unstyled">
+                                        <li><strong>{{ wy.wyno }}</strong></li>
+                                        <li>{{ wy.cellphone | zcellphone }}</li>
+                                        <li>{{ wy.workphone | zworkphone }}</li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-sm-12">
+
+                                    <ul class="list-unstyled">
+                                        <li>{{ wy.zwh | get_zwh }}</li>
+                                        <li>{{ wy.party | get_party }}</li>
+
+                                        <li>{{ wy.jiebie | get_jiebie }}</li>
+                                        <li><p><i class="fa fa-map-marker"></i> {{ wy.workplace }}</p></li>
+                                        <li><strong>{{ wy.workpos }}</strong></li>
+
+                                    </ul>
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block mcss %}
+
+    <style type="text/css" rel="stylesheet">
+
+        .grid .ibox {
+            margin-bottom: 0;
+        }
+
+        .grid-item {
+            margin-bottom: 25px;
+            width: 300px;
+        }
+    </style>
+{% endblock %}
+
+{% block bscript %}
+
+    <script src="{% static "js/plugins/masonary/masonry.pkgd.min.js" %}"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            var $container = $('#masonry');
+              $container.masonry({
+                    itemSelector: '.grid-item',
+                    gutter: 20,
+                    isAnimated: true,
+                });
+        });
+
+    </script>
+{% endblock %}

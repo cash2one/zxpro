@@ -1,0 +1,129 @@
+{% load url from future %}{% load xadmin_tags %}{% load i18n %}<!DOCTYPE html>
+<html lang='{{ LANGUAGE_CODE|default:'en-us' }}' {% if LANGUAGE_BIDI %}dir='rtl'{% endif %}>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0'>
+    {% block extrameta %}
+        <meta name='description' content=''>
+        <meta name='author' content=''>
+    {% endblock %}
+    {% block blockbots %}
+        <meta name='robots' content='NONE,NOARCHIVE'/>
+    {% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    {% if LANGUAGE_BIDI %}
+        <link rel='stylesheet' type='text/css'
+              href='{% block stylesheet_rtl %}{% static 'xadmin/css/rtl.css' %}{% endblock %}'/>
+    {% endif %}
+    {% vendor 'bootstrap.css' %}
+    {% if site_theme %}
+        <link rel='stylesheet' type='text/css' id='site-theme' href='{{ site_theme }}'/>
+    {% else %}
+        <link rel='stylesheet' type='text/css' href='{% static 'xadmin/css/themes/bootstrap-xadmin.css' %}'/>
+    {% endif %}
+    <link rel="bookmark"  type="image/x-icon"  href={% static "favicon.ico" %}/>
+    <link rel="shortcut icon" href={% static "favicon.ico" %}>
+    <link href="/static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    {% vendor 'font-awesome.css' 'xadmin.main.css' 'xadmin.plugins.css' 'xadmin.responsive.css' %}
+    {#    <link href="/static/xadmin/css/bootstrap-modal-bs3patch.css" rel="stylesheet"/>#}
+    {#    <link href="/static/xadmin/css/bootstrap-modal.css" rel="stylesheet"/>#}
+    {{ media.css }}
+    {% block extrastyle %}{% endblock %}
+    {% vendor 'jquery.js' %}
+
+    {% url 'xadmin:index' as indexurl %}
+    <script type='text/javascript'>
+        window.__admin_media_prefix__ = '{% filter escapejs %}{% static 'xadmin/' %}{% endfilter %}';
+        window.__admin_path_prefix__ = '{% filter escapejs %}{{ indexurl }}{% endfilter %}';
+    </script>
+    <script type='text/javascript' src='{% url 'xadmin:jsi18n' %}'></script>
+    {% block extrahead %}{% endblock %}
+    {% view_block 'extrahead' %}
+</head>
+<body class='{% block bodyclass %}{% endblock %}'>
+
+<div class='modal fade' id='saveModal' tabindex='-1' role='dialog'
+     aria-labelledby='saveModalLabel' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×
+                </button>
+                <h4 class='modal-title' id='saveModalLabel'>
+                    警告
+                </h4>
+            </div>
+            <div class='modal-body'>
+                <p id="save_msg">您确定要保存当前的配置吗?</p>
+            </div>
+            <div class='modal-footer'>
+                <button type='button' class='btn btn-default' data-dismiss='modal'>关闭
+                </button>
+                <a id="btn_save" type='button' class='btn btn-danger' href='#' data-loading-text="保存中...">确认保存</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+<div class='modal fade' id='myModal' tabindex='-1' role='dialog'
+     aria-labelledby='myModalLabel' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×
+                </button>
+                <h4 class='modal-title' id='myModalLabel'>
+                    欢迎管理员:<span id="uname"></span> (<span id="src"></span>)
+                </h4>
+            </div>
+            <div class='modal-body'>
+                <table class='table'>
+                    <caption>最近登录情况一览</caption>
+                    <thead>
+                    <tr>
+                        <th>来源</th>
+                        <th>时间</th>
+                        <th>状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id='lgs'>
+                    </tbody>
+                </table>
+                <hr/>
+                <p id="howmany"></p>
+                <hr/>
+                <div class="tips" style="display:none">
+                    <a title="点击管理接口" id="p_interface" href="/mnos/midnet_firewall/interface/"
+                       class="btn btn-default"><i
+                            class="fa fa-rocket"></i></a>
+                    <a title="点击管理安全策略" id="p_pfrule" href="/mnos/midnet_firewall/pfrule/" class="btn btn-default"><i
+                            class="fa fa-rocket"></i></a>
+                </div>
+            </div>
+            <div class='modal-footer'>
+                <button type='button' class='btn btn-default' data-dismiss='modal'>知道了
+                </button>
+                <a type='button' class='btn btn-primary' href='/mnos/account/password/'>更新密码</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<!-- Sweet alert -->
+<script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type='text/javascript'>
+</script>
+{% block body %}{% endblock body %}
+{% vendor 'jquery-ui-sortable.js' 'bootstrap.js' 'xadmin.main.js' 'xadmin.responsive.js' %}
+{#    <script src="/static/xadmin/js/bootstrap-modalmanager.js"></script>#}
+{#    <script src="/static/xadmin/js/bootstrap-modal.js"></script>#}
+{{ media.js }}
+{% block extrabody %}{% endblock %}
+{% view_block 'extrabody' %}
+</body>
+</html>

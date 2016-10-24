@@ -1,0 +1,258 @@
+{% extends 'base.html' %}{% load static from staticfiles %}
+{% load myf %}
+
+{% block mcss %}
+    <!-- Toastr style -->
+    <link href="{% static "css/plugins/toastr/toastr.min.css" %}" rel="stylesheet">
+
+    <style type="text/css">
+
+
+        .well-lg p {
+
+            text-indent: 2em;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block icontent %}
+    <div class="wrapper wrapper-content  animated fadeInRight article">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="ibox">
+
+
+                    <div class="ibox-content" {% if mis.qkfy %}{% else %}style="padding:10px" {% endif %}>
+                        <div class="pull-left">{% if not mis.admin_status %}
+                            <span class="label label-primary">未发布</span>{% endif %}
+                            <span class="label label-primary">{% if mis.issueno %}编号:{{ mis.issueno }}{% else %}
+                                未编号{% endif %}</span>
+                        </div>
+
+                        {% if new %}
+                            <div class="pull-right m-l-sm"><span class="text-success">操作:</span>
+
+                                <div class="btn-group">
+                                    <button class="btn-warning btn btn-xs i-change" zdata="{{ mis.pk }}"
+                                            ztext="{{ mis.biaoti }}">修改
+                                    </button>
+                                    <button class="btn-danger btn btn-xs i-delete" zdata="{{ mis.pk }}"
+                                            ztext="{{ mis.biaoti }}">删除
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+
+
+                        <div class="pull-right m-l-sm"><span class="text-success">作者:</span>
+                            {% for writer in writers %}
+
+                                <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top"
+                                        title="{{ writer.wyno }}"
+                                        type="button">  {% if forloop.first %}
+                                    <i class="fa fa-user text-success"></i>
+                                {% else %}
+                                    <i class="fa fa-user text-info"></i>
+                                {% endif %}{{ writer.name }}</button>
+
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <div class="text-center article-title" style="margin: 40px 0 40px 0">
+                            <h2>
+                                {{ mis.biaoti }}
+                            </h2>
+                        <span
+                                class=""><i class="fa fa-clock-o"></i> <time>{{ mis.submit_time | date:"Y年n月j日" }}</time></span>
+
+                        </div>
+
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="false"> 提案</a>
+                                </li>
+                                {% if mis.banlidafu %}
+                                <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="true">答复</a></li>
+                                {% endif %}
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        {% if mis.tafilename %}
+                                            <div id="flash" style="border: 1px solid #ccc;">
+                                                <embed pluginspage="http://www.macromedia.com/go/getflashplayer"
+                                                       src="/static/done/{{ mis.tafilename }}.swf" width="100%"
+                                                       height="700px" type="application/x-shockwave-flash"
+                                                       quality="high">
+                                            </div>
+                                        {% else %}
+                                            {% if mis.qkfy %}
+                                                <div class="well well-lg">
+                                                    <h3>情况反映</h3>
+
+                                                    <p>
+                                                        {{ mis.qkfy | htmlset }}
+                                                    </p>
+                                                </div>
+                                            {% endif %}
+                                            {% if mis.yjhjy %}
+                                                <div class="well well-lg">
+                                                    <h3>意见和建议</h3>
+
+                                                    <p>
+                                                        {{ mis.yjhjy | htmlset }}
+                                                    </p>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if mis.banlidafu %}
+                                <div id="tab-2" class="tab-pane">
+                                    <div class="panel-body">
+                                        {#                                        <strong>答复</strong>#}
+                                        {##}
+                                        {#                                        <p>... </p>#}
+                                        {##}
+                                        {#                                        <p>...</p>#}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% if mis.admin_status.all %}
+                        <div class="row">
+                            <hr style="border: 1px dashed #ededed"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="small">
+                                    {% for ass in mis.admin_status.all %}
+                                        <span class="label label-primary">{{ ass }}</span>
+                                    {% endfor %}
+                                    {% if lp %}
+                                        <span class="label label-primary"><i
+                                                class="fa fa-comments-o"> </i> {{ lp | length }} 评论</span>
+                                    {% endif %}
+
+                                    <span class="label"> <i class="fa fa-eye"> </i>浏览{{ mis.view_counts }}次 </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                        {% if lp %}
+                            <div class="row">
+                                <div class="col-lg-12">
+
+                                    <h2>评论:</h2>
+                                    {% for l in lp %}
+                                        <div class="social-feed-box">
+                                            <div class="social-avatar">
+                                                <a href="" class="pull-left">
+                                                    <img alt="image" src="/static/photo/small/{{ wy.wyno }}.jpg">
+                                                </a>
+
+                                                <div class="media-body">
+                                                    <a href="/wy/detail/{{ lp.wyno }}">
+                                                        {{ lp.name }}
+                                                    </a>
+                                                    <small class="text-muted">{{ lp.sub_time }}</small>
+                                                </div>
+                                            </div>
+                                            <div class="social-body">
+                                                <p>
+                                                    {{ lp.content }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block bscript %}
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            {% if new %}
+                swal({
+                    title: "您的{{ tos }}已提交成功!",
+                    text: "{{ msg }}",
+                    type: "info",
+                    html: true,
+                    showCancelButton: true,
+                    cancelButtonText: "知道了",
+                    cancelButtonColor: "#ec6c61",
+                    confirmButtonText: "继续上传一份新的{{ tos }}",
+                    confirmButtonColor: "#ec6c62",
+                    closeOnConfirm: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        location.href = '{{ thispath }}'
+                    } else {
+
+                    }
+                })
+            {% endif %}
+
+            $(".timeago").timeago()
+            $(".i-delete").on("click", function () {
+                tmpthis = $(this)
+                swal({
+                    title: "您确定要删除该{{ tos }}吗?",
+                    text: "<code>《" + $(this).attr('ztext') + "》</code>",
+                    type: "warning",
+                    html: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确认删除",
+                    closeOnConfirm: false,
+                    cancelButtonText: "算了",
+                    showLoaderOnConfirm: true,
+                }, function () {
+                    $.get("/issue/{{ cpath }}/del/" + tmpthis.attr("zdata") + "/", function (data) {
+                        if (data.result) {
+                            swal("提醒!", "删除成功", "success");
+                            location.href = '/my_ta/'
+                        }
+                        else {
+                            swal("错误!", "删除不成功,请联系工作人员删除", "error");
+                        }
+                    })
+                });
+            })
+            $(".i-change").on("click", function () {
+                tmpthis = $(this)
+                swal({
+                    title: "您确定要修改该{{ tos }}吗?",
+                    text: '<code>《' + $(this).attr("ztext") + '》</code> <br/><br/><ul class="list-group"> <li class="list-group-item list-group-item-success">注:只能修改 <strong>标题</strong> <strong>情况反映</strong> <strong>意见和建议</strong><br/>基本信息<b>无法修改</b></li> <li class="list-group-item list-group-item-danger">只能删除后重新提交</li></ul>',
+                    html: true,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "去修改",
+                    closeOnConfirm: false,
+                    cancelButtonText: "算了"
+                }, function () {
+                    location.href = "/{{ cpath }}_change/{{ mis.pk }}/"
+                });
+            })
+        })
+
+    </script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% load static from staticfiles %}
+
+{% block icontent %}
+{% endblock %}
+
+
+{% block bscript %}
+
+    <script type="text/javascript">
+
+        swal({
+            title: "您的{{ tos }}已提交成功!!!",
+            text: "{{ msg }}",
+            type: "info",
+            html: true,
+            confirmButtonText: "继续上传一份新的{{ tos }}",
+            confirmButtonColor: "#ec6c62"
+        }, function (isConfirm) {
+            location.href = '{{ thispath }}'
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% load myf %}
+{% block title %}
+
+{% endblock %}
+{% block icontent %}
+    <div class="ibox-content" id="ibox-content">
+
+        <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
+
+
+            {% for mind in minds %}
+
+                <div class="vertical-timeline-block">
+                    <div class="vertical-timeline-icon blue-bg">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+
+                    <div class="vertical-timeline-content">
+                        <p><a href="{{ mind.detail }}"
+                        >{{ mind.text |safe }}</a>
+                        </p>
+                                    <span class="vertical-date">
+                                        <time class="timeago" datetime="{{ mind.time | date:'Y-m-d G:i:s' }}"></time>
+                                    </span>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{% block mcss %}
+
+    <link href="{% static "css/plugins/footable/footable.core.css" %}" rel="stylesheet">
+{% endblock %}
+{% block bscript %}
+
+    <script src="{% static "js/plugins/footable/footable.all.min.js" %}"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(".timeago").timeago()
+        });
+
+    </script>
+{% endblock %}

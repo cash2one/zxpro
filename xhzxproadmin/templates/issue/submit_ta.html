@@ -1,0 +1,526 @@
+{% extends 'base.html' %}{% load static from staticfiles %}
+
+
+{% block icontent %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h2 id="tianleixing"></h2>
+
+                        <form id="form" action="{{ thispath }}" class="wizard-big" method="POST">
+                            {% csrf_token %}
+                            <h1>第一步 基本信息</h1>
+                            <fieldset>
+
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div id="s_geren" class="i-checks"><label> <input type="radio" checked=""
+                                                                                          value="geren" name="goj">
+                                            <i></i> 个人 </label></div>
+                                        <div class="form-group" id="fg_geren">
+                                            <select id="geren" name="geren" data-placeholder="输入(选择)委员名"
+                                                    class="chosen-select"
+                                                    {% if istian %}
+                                                    multiple
+                                                    {% else %}
+                                                    {% endif %} style="width:100%"> {% if istian %}
+                                            {% else %}
+                                                <option value="">请选择作者</option>
+                                            {% endif %}
+                                                {% for user in users %}
+                                                    <option zwyname="{{ user.name }}"
+                                                            value="{{ user.wyno }}"
+                                                            {% if user.selected %}
+                                                                selected
+                                                            {% endif %}>{{ user.name }}
+                                                        ({{ user.wyno }})
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5"></div>
+                                    <div class="col-lg-7">
+                                        <div id="s_jiti" class="i-checks"><label> <input type="radio" value="jiti"
+                                                                                         name="goj"> <i></i>
+                                            {% if istian %}集体{% else %}反映单位{% endif %}
+                                        </label></div>
+                                        <div class="form-group fg_jiti">
+                                            <select id="jiti" name="jiti" data-placeholder="选择集体" class="chosen-select"
+                                                    {% if istian %}multiple{% endif %} style="width:100%;">
+                                                {% if istian %}{% else %}
+                                                    <option value="">请选择组织</option>{% endif %}
+                                                {% for jit in jitis %}
+                                                    <option zwyname="{{ jit.text }}" {% if jit.selected %}{% endif %}
+                                                            value="{{ jit.value }}">{{ jit.text }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5"></div>
+                                    {% if istian %}
+
+
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <label>建议承办单位</label>
+                                                <input id="jianyi" name="jianyi" type="text"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+
+
+
+                                    {% else %}
+
+
+                                        <div class="col-lg-7">
+                                            <div class="form-group fg_jiti">
+                                                <label>执笔人 *
+                                                    <small>(仅填一人)</small>
+                                                </label>
+                                                <input id="zbname" name="zbname" type="text" maxlength="6"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5"></div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group fg_jiti">
+                                                <label>工作单位和职务 *</label>
+                                                <input id="zbwork" name="zbwork" type="text" maxlength="184"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-5"></div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group fg_jiti">
+                                                <label>联系电话 *</label>
+                                                <input id="contact" name="contact" type="text" maxlength="32"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+                            </fieldset>
+                            <h1>第二步 标题 情况反映 意见和建议</h1>
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <h4>标题
+
+                                            </h4>
+                                            <input id="biaoti" name="biaoti" type="text" class="form-control required" value="{{ biaoti }}"
+                                                   maxlength="50">
+                                        </div>
+                                        <div class="form-group">
+                                            <h4>情况反映
+
+                                            </h4>
+                                            <textarea id="qkfy" name="qkfy" rows="6"
+                                                      class="form-control"
+                                            >{{ qkfy }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+
+                                        <div class="form-group">
+                                            <h4>
+                                                意见和建议
+                                            </h4>
+                                            <textarea id="yjhjy" name="yjhjy" rows="6"
+                                                      class="form-control">{{ yjhjy }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <input type="hidden" name="jf_name" id="jf_name" value="">
+                            <input type="hidden" name="jf_wyno" id="jf_wyno" value="">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block mcss %}
+    <link href="{% static "css/plugins/iCheck/custom.css" %}" rel="stylesheet">
+    <link href="{% static "css/plugins/steps/jquery.steps.css" %}" rel="stylesheet">
+    <link href="{% static "css/plugins/chosen/chosen.css" %}" rel="stylesheet">
+
+{% endblock %}
+{% block mstyle %}
+
+    <style>
+
+        .wizard > .content > .body {
+            position: relative;
+        }
+
+    </style>
+
+{% endblock %}
+{% block bscript %}
+
+
+    <!-- Steps -->
+    <script src="{% static "js/plugins/staps/jquery.steps.min.js" %}"></script>
+
+    <!-- Jquery Validate -->
+    <script src="{% static "js/plugins/validate/jquery.validate.min.js" %}"></script>
+    <script src="{% static "js/plugins/chosen/chosen.jquery.js" %}"></script>
+    <!-- iCheck -->
+    <script src="{% static "js/plugins/iCheck/icheck.min.js" %}"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+
+            $("#form").steps({
+                bodyTag: "fieldset",
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex) {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex == 1) {
+                        {% if istian %}
+
+                            if ($("#" + $(".iradio_square-green.checked").children('input[name=goj]').val()).val())
+                                return true;
+                            else {
+                                swal({
+                                    title: "基本信息不全",
+                                    text: "还没有选择作者",
+                                    type: "error"
+                                });
+                                return false;
+                            }
+                        {% else %}
+                            val = $("#" + $(".iradio_square-green.checked").children('input[name=goj]').val()).val()
+
+                            if ($("#tianleixing").text() == "个人社情民意") {
+                                if (val && val != "") ;
+                                else {
+                                    swal({
+                                        title: "基本信息不全",
+                                        text: "请输入个人姓名,必须为政协委员",
+                                        type: "error"
+                                    });
+                                    return false;
+                                }
+                            }
+                            else {
+                                if (val && val != "") {
+
+
+                                    if ($("#zbname").val())
+                                        ;
+                                    else {
+                                        swal({
+                                            title: "基本信息不全",
+                                            text: "请填写执笔人姓名",
+                                            type: "error"
+                                        });
+                                        return false;
+                                    }
+                                    if ($("#contact").val())
+                                        ;
+                                    else {
+                                        swal({
+                                            title: "基本信息不全",
+                                            text: "请填写执笔人联系电话",
+                                            type: "error"
+                                        });
+                                        return false;
+                                    }
+                                    if ($("#zbwork").val())
+                                        ;
+                                    else {
+                                        swal({
+                                            title: "基本信息不全",
+                                            text: "请填写工作单位和职务",
+                                            type: "error"
+                                        });
+                                        return false;
+
+                                    }
+                                }
+                                else {
+                                    swal({
+                                        title: "基本信息不全",
+                                        text: "请选择组织",
+                                        type: "error"
+                                    });
+                                    return false;
+                                }
+
+                            }
+                        {% endif %}
+
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex) {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+
+                },
+                onFinishing: function (event, currentIndex) {
+
+                    if ($("#qkfy").val() || $("#yjhjy").val()) {
+
+                        var form = $(this);
+                        form.validate().settings.ignore = ":disabled";
+                        return form.valid();
+
+
+                    }
+                    else {
+                        if (currentIndex == 0)
+                            swal({
+                                title: "注意",
+                                text: "点击下一步",
+                                type: "warning",
+                                timer: 2000,
+
+                            });
+                        else
+                            swal({
+                                title: "内容有错",
+                                text: "情况反映 意见和建议 不能全为空",
+                                type: "error"
+                            });
+                        return false;
+                    }
+
+
+                },
+                onFinished: function (event, currentIndex) {
+
+                    var form = $(this);
+                    swal({
+                        title: "确定要提交吗?",
+                        text: "<p>{{ tos }}提交之后,是可以<strong>修改和删除</strong>的,</br>但是必须是在{{ tos }}被<strong>发布或立案</strong>之前</p>",
+                        html: true,
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定提交",
+                        cancelButtonText: "再看看",
+                        closeOnConfirm: false,
+                    }, function () {
+
+
+
+                        {% if istian %}
+                            jog = $(".iradio_square-green.checked").children('input[name=goj]').val()
+                            jf_name = ""
+                            jf_wyno = ""
+                            zzcount = $("#" + jog + "_chosen .chosen-choices [data-option-array-index]").length
+                            $("#" + jog + "_chosen .chosen-choices [data-option-array-index]").each(function (i, one) {
+
+                                index = $(one).attr("data-option-array-index")
+                                $("#" + jog + " option").each(function (ii, oo) {
+                                    if (ii == index) {
+                                        jf_name += $(oo).attr('zwyname')
+                                        jf_wyno += $(oo).val()
+                                        {#                                console.log("i=" + i)#}
+                                        {#                                console.log("zzcount=" + zzcount)#}
+                                        if ((i + 1) < zzcount) {
+                                            jf_name += ','
+                                            jf_wyno += ','
+                                        }
+                                    }
+                                })
+
+
+                            })
+                            $("#jf_name").val(jf_name)
+                            $("#jf_wyno").val(jf_wyno)
+
+                        {% else %}
+
+                            jog = $(".iradio_square-green.checked").children('input[name=goj]').val()
+                            jf_name = ""
+                            jf_wyno = ""
+
+
+                            val = $("#" + $(".iradio_square-green.checked").children('input[name=goj]').val()).val()
+
+                            if ($("#tianleixing").text() == "个人社情民意") {
+
+                                $("#" + jog + " option").each(function (ii, oo) {
+
+                                    if (val == $(oo).val()) {
+
+                                        jf_name = $(oo).attr('zwyname')
+                                        jf_wyno = $(oo).val()
+                                        return false;
+
+                                    }
+                                })
+
+                            }
+                            else {
+
+                                $("#" + jog + " option").each(function (ii, oo) {
+
+                                    if (val == $(oo).val()) {
+
+                                        jf_name = $(oo).attr('zwyname')
+                                        jf_wyno = $(oo).val()
+                                        return false;
+
+                                    }
+                                })
+                                jf_name = jf_name + "(" + $("#zbname").val() + ")"
+
+                            }
+                            $("#jf_name").val(jf_name)
+                            $("#jf_wyno").val(jf_wyno)
+                        {% endif %}
+                        form.submit();
+
+                    });
+
+
+                    return false
+
+                },
+                enableCancelButton: false,
+                enablePagination: true,
+                /* Labels */
+                labels: {
+                    cancel: "取消",
+                    current: "当前步:",
+                    pagination: "页码",
+                    finish: "完成",
+                    next: "下一步",
+                    previous: "上一步",
+                    loading: "加载中 ..."
+                }
+            }).validate({
+                errorPlacement: function (error, element) {
+                    element.before(error);
+                },
+                rules: {
+                    confirm: {
+                        equalTo: "#password"
+                    }
+                }
+            });
+
+            {#            var config = {#}
+            {#                '.chosen-select': {},#}
+            {#                '.chosen-select-deselect': {allow_single_deselect: true},#}
+            {#                '.chosen-select-no-single': {disable_search_threshold: 5},#}
+            {#                '.chosen-select-no-results': {no_results_text: '没有找到'},#}
+            {#                '.chosen-select-width': {width: "95%"}#}
+            {#            }#}
+            {#            for (var selector in config) {#}
+            {#                $(selector).chosen(config[selector]);#}
+            {#            }#}
+
+
+            $(".chosen-select").chosen({
+
+                no_results_text: '没有找到',
+                disable_search_threshold: 5,
+                max_selected_options: 0,
+                allow_single_deselect: true,
+                search_contains: true
+
+            })
+
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $(".fg_jiti").hide()
+            $("#tianleixing").text("个人{{ tos }}")
+            $("#s_jiti").on("ifChecked", function () {
+
+                $("#tianleixing").text("集体(组织){{ tos }}")
+                $(".fg_jiti").show()
+                $("#fg_geren").hide()
+            })
+            $("#s_geren").on("ifChecked", function () {
+                $("#tianleixing").text("个人{{ tos }}")
+                $("#fg_geren").show()
+                $(".fg_jiti").hide()
+            })
+
+        });
+
+        jQuery.extend(jQuery.validator.messages, {
+            required: "不能留空",
+            remote: "请修正该字段",
+            email: "请输入正确格式的电子邮件",
+            url: "请输入合法的网址",
+            date: "请输入合法的日期",
+            dateISO: "请输入合法的日期 (ISO).",
+            number: "请输入合法的数字",
+            digits: "只能输入整数",
+            creditcard: "请输入合法的信用卡号",
+            equalTo: "请再次输入相同的值",
+            accept: "请输入拥有合法后缀名的字符串",
+            maxlength: jQuery.validator.format("不能超过{0}字 "),
+            minlength: jQuery.validator.format("不能少于{0}字 "),
+            rangelength: jQuery.validator.format("请输入 一个长度介于 {0} 和 {1} 之间的字符串"),
+            range: jQuery.validator.format("请输入一个介于 {0} 和 {1} 之间的值"),
+            max: jQuery.validator.format("请输入一个最大为{0} 的值"),
+            min: jQuery.validator.format("请输入一个最小为{0} 的值")
+        });
+
+        function forbidBackSpace(e) {
+            var ev = e || window.event; //获取event对象
+            var obj = ev.target || ev.srcElement; //获取事件源
+            var t = obj.type || obj.getAttribute('type'); //获取事件源类型
+//获取作为判断条件的事件类型
+            var vReadOnly = obj.readOnly;
+            var vDisabled = obj.disabled;
+//处理undefined值情况
+            vReadOnly = (vReadOnly == undefined) ? false : vReadOnly;
+            vDisabled = (vDisabled == undefined) ? true : vDisabled;
+//当敲Backspace键时，事件源类型为密码或单行、多行文本的，
+//并且readOnly属性为true或disabled属性为true的，则退格键失效
+            var flag1 = ev.keyCode == 8 && (t == "password" || t == "text" || t == "textarea") && (vReadOnly == true || vDisabled == true);
+//当敲Backspace键时，事件源类型非密码或单行、多行文本的，则退格键失效
+            var flag2 = ev.keyCode == 8 && t != "password" && t != "text" && t != "textarea";
+//判断
+            if (flag2 || flag1) return false;
+        }
+        //禁止后退键 作用于Firefox、Opera
+        // document.onkeypress = forbidBackSpace;
+        //禁止后退键 作用于IE、Chrome
+        document.onkeydown = forbidBackSpace;
+    </script>
+
+{% endblock %}

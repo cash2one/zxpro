@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block mtitle %}
+    欢迎登录
+{% endblock %}
+{% block icontent %}
+    <div class="row">
+
+
+        <div class="col-lg-6 ">
+            <div class="ibox float-e-margins margin-zll-top">
+                <div class="ibox-title">
+                    <h5>公告</h5>
+
+                    <div class="ibox-tools">
+                        <a class="btn btn-primary btn-xs" href="/my_ad/">查看全部</a>
+                    </div>
+                </div>
+                <div class="ibox-content no-padding" style="display: block;">
+                    <ul class="list-group">
+                        {% for a in ads %}
+                            {% if forloop.counter < 13 %}
+                            <li class="list-group-item">
+                                <a href="/ad/detail/{{ a.pk }}/" data-toggle="tooltip" data-placement="top"
+                                   title="{{ a.submit_time }}">{{ a }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% if hys %}
+        <div class="col-lg-4 ">
+            <div class="ibox float-e-margins margin-zll-top">
+                <div class="ibox-title">
+                    <h5>会议动态</h5>
+
+                    <div class="ibox-tools">
+
+                        {% if hys %}
+                            <a class="btn btn-primary btn-xs" href="/my_nt/">查看全部</a>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="ibox-content no-padding" style="display: block;">
+                    <ul class="list-group">
+
+                        {% for a in hys %}
+                            {% if forloop.counter < 13 %}
+                            <li class="list-group-item">
+                                <a href="#">{{ a }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-lg-6 ">
+            <div class="ibox float-e-margins margin-zll-top">
+                <div class="ibox-title">
+                    <h5>我的提醒</h5>
+
+                    <div class="ibox-tools">
+
+                        <a class="btn btn-primary btn-xs" href="/my_nt/">查看全部</a>
+
+                    </div>
+
+                </div>
+                <div class="ibox-content no-padding" style="display: block;">
+                    <ul class="list-group">
+                        {% for mind in minds %}
+                            {% if forloop.counter < 13 %}
+                            <li class="list-group-item">
+                                <a href="{{ mind.detail }}" data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="{{ mind.time }}">{{ mind.text |safe }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block bscript %}
+
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('[data-toggle="tooltip"]').tooltip()
+
+        })
+
+    </script>
+{% endblock %}
+{% block mcss %}
+
+
+    <style type="text/css" rel="stylesheet">
+
+        .margin-zll-top {
+
+            margin-top: 10px !important;
+
+        }
+    </style>
+{% endblock %}

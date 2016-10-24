@@ -1,0 +1,83 @@
+{% extends 'base.html' %}{% load static from staticfiles %}
+{% load myf %}
+{% block mcss %}
+    <!-- Toastr style -->
+    <link href="{% static "css/plugins/toastr/toastr.min.css" %}" rel="stylesheet">
+
+    <style type="text/css">
+
+
+        .well-lg p {
+
+            text-indent: 2em;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block icontent %}
+    <div class="wrapper wrapper-content  animated fadeInRight article">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="ibox">
+                    <div class="ibox-content" {% if mis.qkfy %}{% else %}style="padding:10px" {% endif %}>
+                        <div class="pull-right">
+                            {% for writer in writers %}
+                                <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top"
+                                        title="{{ writer.wyno }}"
+                                        type="button">{{ writer.name }}</button>
+                            {% endfor %}
+                            <span class="text-muted">{{ mis.issueno }}</span><span
+                                class="text-muted"><i class="fa fa-clock-o"></i> <time>{{ mis.submit_time }}</time></span>
+                        </div>
+                        <div class="text-center article-title" style="margin: 40px 0 40px 0">
+                            <h2>
+                                {{ mis.name }}
+                            </h2>
+                        </div>
+
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="false"> 内容</a>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        {% if mis.docname %}
+                                            <div id="flash" style="border: 1px solid #ccc;">
+                                                <embed pluginspage="http://www.macromedia.com/go/getflashplayer"
+                                                       src="/static/done/{{ mis.docname }}.swf" width="100%"
+                                                       height="700px" type="application/x-shockwave-flash"
+                                                       quality="high">
+                                            </div>
+                                        {% else %}
+                                            {% if mis.content %}
+                                                <div class="well well-lg">
+                                                    <p style=" text-indent:2em ">
+                                                        {{ mis.content | htmlset}}
+                                                    </p>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bscript %}
+    <script type="text/javascript">
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+            $(".timeago").timeago()
+        })
+    </script>
+{% endblock %}
